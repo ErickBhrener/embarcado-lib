@@ -1,0 +1,37 @@
+Question 10-1: Example 10 -4 generates the answer 47 instead of the expected answer 144. Why?
+
+The parentheses were missing in the define of the MACRO. Without the parentheses, the compiler understands that the only the first parameter is going to be used.
+
+Question 10-4: Example 10 -7 is supposed to print the message "Fatal Error: Abort" and exit when
+it receives bad data. But when it gets good data, it exits. Why?
+
+A primeira razão deve-se ao fato de que o if precisa de chaveamento ({ }).
+Segundo, a chamado do macro DIE deveria ser realizado fora do if, não dentro, pois a condição resulta em falso e nunca entra no if.
+
+
+
+Question 10-5: What does Example 10-8 output? Try running it on your machine. Why did it
+output what it did? Try checking the output of the preprocessor.
+
+Na definição da macro, onde SQR(x) (x * x), esse macro receber um valor composto. No caso, recebe um valor (counter + 1).
+Esse valor só será somado na execução do macro, ou seja:
+(counter + 1 * counter + 1)
+O problema da questão é que a precedência da multiplicação(*) é maior do que precedência da soma(+). O problema pode ser resolvido da seguinte maneira:
+#define SQR(x) ((x) * (x))
+
+Question 10-6: Why will Example 10-9 not produce the expected output? By how much will the
+counter go up each time?
+
+Quando o macro SQR é chamado, o valor ++counter é passado. Da mesma maneira da questão anterior, count será incrementado na execução do macro. No caso:
+((++counter) * (++counter))
+Dessa forma, counter será incrementado duas vezes.
+
+Question 10-7: Example 10-10 tells us that we have an undefined variable number, but our only
+variable name is counter .
+
+Problema nessa questão deve-se ao fato de existir um espaço entre a definição do macro e o argumento esperado.
+#define RECIPROCAL (number) (1.0 / (number))
+
+De forma correta:
+
+#define RECIPROCAL(number) (1.0 / (number))
