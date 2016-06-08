@@ -139,7 +139,35 @@ static void GPIOPinWrite(unsigned int baseAdd,
         HWREG(baseAdd + GPIO_CLEARDATAOUT) = (1 << pinNumber);
     }
 }
+static void GetGPIOPinName(){
+        
+    if (GPIO_INSTANCE_PIN_NUMBER >= 0 || GPIO_INSTANCE_PIN_NUMBER <= 7){
+        GPIOPinMuxSetup(CONTROL_CONF_GPMC_AD(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+    }else if (GPIO_INSTANCE_PIN_NUMBER >= 8 || GPIO_INSTANCE_PIN_NUMBER <= 11){
+        switch(GPIO_INSTANCE_PIN_NUMBER){
+            case 8:
+                GPIOPinMuxSetup(CONTROL_CONF_UART_RTSN(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+                break;
+            case 9:
+                GPIOPinMuxSetup(CONTROL_CONF_UART_CTSN(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+                break;
+            case 10:
+                GPIOPinMuxSetup(CONTROL_CONF_UART_RXD(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+                break;
+            case 11:
+                GPIOPinMuxSetup(CONTROL_CONF_UART_TXD(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+                break;
+        }
+    }else if (GPIO_INSTANCE_PIN_NUMBER >= 12 || GPIO_INSTANCE_PIN_NUMBER <= 14){
+        GPIOPinMuxSetup(CONTROL_CONF_GPMC_AD(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+    }else if (GPIO_INSTANCE_PIN_NUMBER >= 16 || GPIO_INSTANCE_PIN_NUMBER <= 27){
+        GPIOPinMuxSetup(CONTROL_CONF_GPMC_A(GPIO_INSTANCE_PIN_NUMBER-16), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER-16));
+    }else if (GPIO_INSTANCE_PIN_NUMBER == 28) {
+        GPIOPinMuxSetup(CONTROL_CONF_GPMC_BEN(GPIO_INSTANCE_PIN_NUMBER), CONTROL_CONF_MUXMODE(GPIO_INSTANCE_PIN_NUMBER));
+    }else if (GPIO_INSTANCE_PIN_NUMBER >= 29 || GPIO_INSTANCE_PIN_NUMBER <= 31){
 
+    }
+}
 /*FUNCTION*-------------------------------------------------------
 *
 * Function Name : ledInit
@@ -151,8 +179,8 @@ int ledInit(){
     GPIO1_ModuleClkConfig();
  
     /* Selecting GPIO1[23] pin for use. */
-    GPIOPinMuxSetup(CONTROL_CONF_GPMC_A(7), CONTROL_CONF_MUXMODE(7));
-    
+    /*GPIOPinMuxSetup(CONTROL_CONF_GPMC_A(7), CONTROL_CONF_MUXMODE(7));*/
+    GetGPIOPinName();
     /* Enabling the GPIO module. */
     GPIOModuleEnable(GPIO_INSTANCE_ADDRESS);
 
